@@ -31,20 +31,21 @@ with app.app_context():
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve(path: str):
-    static_folder_path = app.static_folder
-
-    # 根路径直接返回 index.html（与 Vite 构建结果保持一致）
+def serve(path):
     if path == "":
-        return send_from_directory(static_folder_path, "index.html")
+        return "OK", 200
+    static_folder_path = app.static_folder
+    if static_folder_path is None:
+            return "Static folder not configured", 404
 
-    # 其它静态资源
-    file_path = os.path.join(static_folder_path, path)
-    if os.path.exists(file_path):
+    if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
         return send_from_directory(static_folder_path, path)
-
-    # 兜底：前端是单页应用，所有未知路径都回到 index.html
-    return send_from_directory(static_folder_path, "index.html")
+    else:
+        index_path = os.path.join(static_folder_path, 'index.html')
+        if os.path.exists(index_path):
+            return send_from_directory(static_folder_path, 'index.html')
+        else:
+            return "index.html not found", 404
 
 @app.route('/health')
 def health():
