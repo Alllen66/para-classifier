@@ -2,9 +2,10 @@ services:
   - type: web
     name: para-classifier
     env: python
+    rootDir: .
     buildCommand: |
       cd para-classifier-frontend
-      npm install
+      npm install --legacy-peer-deps
       npm run build
       cp -r dist/* ../para-file-classifier/src/static/
       cd ../para-file-classifier
