@@ -1,5 +1,6 @@
 import os
 import sys
+import pathlib
 # DON'T CHANGE THIS !!!
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -18,9 +19,12 @@ CORS(app)
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(classifier_bp, url_prefix='/api')
 
-# uncomment if you need to use database
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# 将 SQLite 文件放到 /tmp，可通过环境变量覆盖
+db_path = pathlib.Path(os.environ.get("DB_PATH", "/tmp/app.db"))
+db_path.parent.mkdir(parents=True, exist_ok=True)     # 确保目录存在
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 with app.app_context():
     db.create_all()
