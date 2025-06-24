@@ -7,7 +7,8 @@ services:
       cd para-classifier-frontend
       npm install --legacy-peer-deps
       npm run build
-      cp -r dist/* ../para-file-classifier/src/static/
+      mkdir -p ../para-file-classifier/src/static
+      cp -a dist/. ../para-file-classifier/src/static/
       cd ../para-file-classifier
       pip install -r requirements.txt
     startCommand: cd para-file-classifier && python src/main.py
