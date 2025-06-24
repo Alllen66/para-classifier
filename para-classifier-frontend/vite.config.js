@@ -16,7 +16,7 @@ export default defineConfig({
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   build: {
-    outDir: 'dist',
+    outDir: path.resolve(__dirname, '../para-file-classifier/src/static'),
     assetsDir: 'assets',
     rollupOptions: {
       output: {
