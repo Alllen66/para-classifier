@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-import { FolderOpen, Sparkles, ArrowRight, Info, Loader2, AlertCircle, KeyRound, FolderSearch } from 'lucide-react'
+import { FolderOpen, Sparkles, ArrowRight, Info, Loader2, AlertCircle, KeyRound, FolderSearch, ChevronDown, ChevronRight } from 'lucide-react'
 import { Alert, AlertDescription } from './ui/alert'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible'
 
 const HomePage = ({ setAnalysisData }) => {
   const [sourcePath, setSourcePath] = useState('')
@@ -16,6 +17,8 @@ const HomePage = ({ setAnalysisData }) => {
   const [keyTestResult, setKeyTestResult] = useState(null)
   const [error, setError] = useState('')
   const [isElectron, setIsElectron] = useState(false)
+  const [showPathGuide, setShowPathGuide] = useState(false)
+  const [showApiGuide, setShowApiGuide] = useState(false)
   const navigate = useNavigate()
 
   // 检查是否在Electron环境中
@@ -23,7 +26,14 @@ const HomePage = ({ setAnalysisData }) => {
     setIsElectron(window.electron && window.electron.selectDirectory)
   }, [])
 
-    const handleSelectFolder = async (setter) => {
+  // 处理路径输入，去除前后的引号
+  const cleanPath = (path) => {
+    if (!path) return path
+    // 去除前后的单引号或双引号
+    return path.replace(/^['"]|['"]$/g, '').trim()
+  }
+
+  const handleSelectFolder = async (setter) => {
     try {
       // 检查是否在Electron环境中
       if (window.electron && window.electron.selectDirectory) {
@@ -207,68 +217,65 @@ const HomePage = ({ setAnalysisData }) => {
         <CardHeader>
           <CardTitle>开始智能分类</CardTitle>
           <CardDescription>
-            输入您的文件夹路径，AI 将自动分析并生成 PARA 分类建议
+            选择或输入您的文件夹路径，AI 将自动分析并生成 PARA 分类建议
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {!isElectron && (
-            <Alert className="mb-6">
-              <Info className="h-4 w-4" />
-              <AlertDescription>
-                <strong>浏览器模式</strong>：当前在浏览器中运行，请手动输入文件夹的完整路径。
-                如需使用文件夹选择功能，请在Electron应用中打开。
-              </AlertDescription>
-            </Alert>
-          )}
           <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* 源文件夹路径 */}
+            {/* 源文件夹路径 */}
             <div className="space-y-2">
               <Label htmlFor="sourcePath">第一步：输入要整理的文件夹路径 *</Label>
-              <div className="flex space-x-2">
-                <Input
-                  id="sourcePath"
-                  type="text"
-                  placeholder="请输入完整路径，例如：/Users/username/Documents/待整理文件"
-                  value={sourcePath}
-                  onChange={(e) => setSourcePath(e.target.value)}
-                  required
-                />
-                {isElectron && (
-                  <Button type="button" variant="outline" onClick={() => handleSelectFolder(setSourcePath)}>
-                    <FolderSearch className="mr-2 h-4 w-4" /> 选择
+              <Input
+                id="sourcePath"
+                type="text"
+                placeholder="请输入完整路径，例如：/Users/username/Documents/待整理文件"
+                value={sourcePath}
+                onChange={(e) => setSourcePath(cleanPath(e.target.value))}
+                required
+              />
+              <Collapsible open={showPathGuide} onOpenChange={setShowPathGuide}>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-xs text-gray-500 p-0 h-auto">
+                    {showPathGuide ? (
+                      <ChevronDown className="h-3 w-3 mr-1" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3 mr-1" />
+                    )}
+                    💡 如何快速获取文件夹路径？
                   </Button>
-                )}
-              </div>
-              {!isElectron && (
-                <p className="text-xs text-gray-500">
-                  💡 提示：请输入完整的文件夹路径，例如：/Users/你的用户名/Documents/文件夹名
-                </p>
-              )}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2">
+                  <div className="text-xs text-gray-500 space-y-1 bg-gray-50 p-3 rounded-md">
+                    <p className="font-medium">快捷获取路径方法：</p>
+                    <ul className="ml-4 space-y-1">
+                      <li>• <strong>Mac用户</strong>：在访达中右键文件夹 → 按住Option键 → 点击"将路径名拷贝"</li>
+                      <li>• <strong>Windows用户</strong>：在文件夹地址栏点击，Ctrl+A全选后Ctrl+C复制完整路径</li>
+                    </ul>
+                    <p className="font-medium mt-2">💡 支持的路径格式：</p>
+                    <ul className="ml-4 space-y-1">
+                      <li>• 普通路径：<code>/Users/username/Documents/文件夹</code></li>
+                      <li>• 带引号路径：<code>'/Users/username/Documents/文件夹'</code></li>
+                      <li>• 双引号路径：<code>"/Users/username/Documents/文件夹"</code></li>
+                    </ul>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
             
             {/* 目标文件夹路径 */}
             <div className="space-y-2">
               <Label htmlFor="targetPath">第二步：输入目标文件夹路径 *</Label>
-              <div className="flex space-x-2">
-                <Input
-                  id="targetPath"
-                  type="text"
-                  placeholder="请输入完整路径，例如：/Users/username/Documents/PARA"
-                  value={targetPath}
-                  onChange={(e) => setTargetPath(e.target.value)}
-                  required
-                />
-                {isElectron && (
-                  <Button type="button" variant="outline" onClick={() => handleSelectFolder(setTargetPath)}>
-                    <FolderSearch className="mr-2 h-4 w-4" /> 选择
-                  </Button>
-                )}
-              </div>
-              {!isElectron && (
-                <p className="text-xs text-gray-500">
-                  💡 提示：这是整理后文件的存放位置，建议创建一个新的文件夹
-                </p>
-              )}
+              <Input
+                id="targetPath"
+                type="text"
+                placeholder="请输入完整路径，例如：/Users/username/Documents/PARA"
+                value={targetPath}
+                onChange={(e) => setTargetPath(cleanPath(e.target.value))}
+                required
+              />
+              <p className="text-xs text-gray-500">
+                💡 提示：这是整理后文件的存放位置，建议创建一个新的文件夹用于存放分类结果
+              </p>
             </div>
 
             {/* API Key */}
@@ -305,38 +312,60 @@ const HomePage = ({ setAnalysisData }) => {
                 </Button>
               </div>
               
-              {/* API Key测试结果 */}
-              {keyTestResult && (
-                <Alert variant={keyTestResult.success ? "default" : "destructive"} className="mt-2">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    {keyTestResult.success ? (
-                      <div>
-                        <div className="font-medium text-green-800">✅ {keyTestResult.message}</div>
-                        <div className="text-sm text-green-700 mt-1">
-                          模型: {keyTestResult.model}<br/>
-                          端点: {keyTestResult.endpoint}<br/>
-                          测试响应: {keyTestResult.testResponse}
-                        </div>
-
-                      </div>
+              <Collapsible open={showApiGuide} onOpenChange={setShowApiGuide}>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-xs text-gray-500 p-0 h-auto">
+                    {showApiGuide ? (
+                      <ChevronDown className="h-3 w-3 mr-1" />
                     ) : (
-                      <div>
-                        <div className="font-medium">❌ {keyTestResult.error}</div>
-                        {keyTestResult.detail && (
-                          <div className="text-sm mt-1">详情: {JSON.stringify(keyTestResult.detail)}</div>
-                        )}
-                      </div>
+                      <ChevronRight className="h-3 w-3 mr-1" />
                     )}
-                  </AlertDescription>
-                </Alert>
-              )}
-              
-              <p className="text-xs text-gray-500">
-                API Key 仅用于本次分析，不会被存储。建议先测试API Key有效性。
-              </p>
+                    🔑 如何获取豆包 API Key？
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2">
+                  <div className="text-xs text-gray-500 space-y-2 bg-gray-50 p-3 rounded-md">
+                    <p className="font-medium">获取步骤：</p>
+                    <ol className="ml-4 space-y-1">
+                      <li>1. 访问 <a href="https://console.volcengine.com/ark" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">火山引擎控制台</a></li>
+                      <li>2. 注册/登录火山引擎账号</li>
+                      <li>3. 进入"豆包大模型"或"方舟"服务</li>
+                      <li>4. 在API密钥管理页面创建新的API Key</li>
+                      <li>5. 复制生成的API Key并粘贴到上方输入框</li>
+                    </ol>
+                    <p className="mt-2 font-medium">⚠️ API Key 仅用于本次分析，不会被存储。建议先测试API Key有效性。</p>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
             
+            {/* API Key测试结果 */}
+            {keyTestResult && (
+              <Alert variant={keyTestResult.success ? "default" : "destructive"} className="mt-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {keyTestResult.success ? (
+                    <div>
+                      <div className="font-medium text-green-800">✅ {keyTestResult.message}</div>
+                      <div className="text-sm text-green-700 mt-1">
+                        模型: {keyTestResult.model}<br/>
+                        端点: {keyTestResult.endpoint}<br/>
+                        测试响应: {keyTestResult.testResponse}
+                      </div>
+
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="font-medium">❌ {keyTestResult.error}</div>
+                      {keyTestResult.detail && (
+                        <div className="text-sm mt-1">详情: {JSON.stringify(keyTestResult.detail)}</div>
+                      )}
+                    </div>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+
             {/* 错误提示 */}
             {error && (
               <Alert variant="destructive">

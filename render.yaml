@@ -16,4 +16,6 @@ services:
       - key: FLASK_DEBUG
         value: "False"
       - key: PORT
-        value: "5002" 
+        value: "5002"
+
+api_key: rnd_dppdVu5lt8asMgUF2zB9SjwJtFO7 
