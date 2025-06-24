@@ -24,8 +24,12 @@ RUN npm run build
 WORKDIR /app/para-file-classifier
 RUN pip install --no-cache-dir -r requirements.txt
 
+# 复制并设置 entrypoint
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # 暴露端口
 EXPOSE 5002
 
 # 启动命令
-CMD ["python", "src/main.py"] 
+ENTRYPOINT ["/app/entrypoint.sh"] 
