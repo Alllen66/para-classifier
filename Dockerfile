@@ -20,6 +20,10 @@ WORKDIR /app/para-classifier-frontend
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
+# ✨ 将 dist 文件夹拷贝到后端静态目录
+RUN mkdir -p /app/para-file-classifier/src/static
+RUN cp -r dist/* /app/para-file-classifier/src/static/
+
 # 切换到后端目录并安装依赖
 WORKDIR /app/para-file-classifier
 RUN pip install --no-cache-dir -r requirements.txt
