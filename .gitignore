@@ -26,6 +26,10 @@ node_modules/
 dist/
 .vite/
 build/
+# 解除对前端源码中 src/lib 目录的忽略
+!para-classifier-frontend/src/lib/
+# 保留顶级 lib 目录忽略
+lib/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
