@@ -70,8 +70,11 @@ def scan_target_directory_structure(target_path):
         for dir_name, subdirs in structure.items():
             if subdirs:
                 for subdir in subdirs[:5]:  # 只显示前5个子目录
+                    pass  # 移除了print语句
                 if len(subdirs) > 5:
+                    pass  # 移除了print语句
             else:
+                pass  # 移除了print语句
         return structure
     except Exception as e:
         print(f"❌ 扫描目标目录结构失败: {e}")
@@ -384,6 +387,7 @@ def generate_classification_plan_with_ai(files_info, target_base_path, api_key):
             validation_result = validate_classification_plan(classification_plan, existing_structure, target_base_path)
             if validation_result['valid']:
                 if validation_result['warnings']:
+                    pass  # 这里可以加日志或处理警告
                 return classification_plan
             else:
                 print(f"❌ 分类方案验证失败: {validation_result['errors']}")
@@ -469,61 +473,50 @@ def generate_classification_plan_with_ai_batch_tracked(files_info, target_base_p
         analysis_tasks[task_id]['average_batch_time'] = sum(batch_times) / len(batch_times) if batch_times else None
         
         if batch_times:
-        
+            pass  # 这里原本是进度估算代码
         try:
             # 调用原有的AI分析函数处理这一批文件（带重试机制）
             batch_result = None
             max_retries = 2
-            
             for retry_count in range(max_retries + 1):
                 try:
                     batch_result = generate_classification_plan_with_ai(batch_files, target_base_path, api_key)
                     if batch_result:
                         break  # 成功则跳出重试循环
-                    else:
                 except Exception as e:
                     print(f"⚠️ 第 {batch_num + 1} 批次第 {retry_count + 1} 次尝试失败: {e}")
                     if retry_count < max_retries:
                         time.sleep(2)  # 等待2秒后重试
                     else:
                         print(f"❌ 第 {batch_num + 1} 批次所有重试都失败")
-            
             # 记录批次处理时间
             batch_end_time = time.time()
             batch_duration = batch_end_time - batch_start_time
             batch_times.append(batch_duration)
-            
             if batch_result:
                 successful_batches += 1
-                
                 # 收集结果
                 all_mapping_tables.extend(batch_result.get('mapping_table', []))
-                
                 # 合并目录结构（添加调试信息）
                 batch_structure = batch_result.get('directory_structure', {})
-                for top_dir, sub_structure in batch_structure.items():
-                
-                
                 for top_dir, sub_structure in batch_structure.items():
                     if top_dir not in merged_directory_structure:
                         merged_directory_structure[top_dir] = sub_structure
                     else:
                         merge_directory_structures(merged_directory_structure[top_dir], sub_structure)
-                
                 for top_dir in merged_directory_structure:
                     if isinstance(merged_directory_structure[top_dir], dict):
+                        pass
                     else:
-                
+                        pass
                 # 收集讨论点
                 all_discussion_points.extend(batch_result.get('discussion_points', []))
-                
                 # 更新成功进度，包含时间信息
                 analysis_tasks[task_id]['message'] = f'已完成 {batch_num + 1}/{total_batches} 批次，成功分类 {len(all_mapping_tables)} 个文件'
             else:
                 print(f"❌ 第 {batch_num + 1} 批次处理失败，耗时 {batch_duration:.1f}秒")
                 # 更新错误信息但继续处理
                 analysis_tasks[task_id]['message'] = f'第 {batch_num + 1} 批次失败，继续处理剩余批次...'
-                
         except Exception as e:
             batch_end_time = time.time()
             batch_duration = batch_end_time - batch_start_time
@@ -542,7 +535,7 @@ def generate_classification_plan_with_ai_batch_tracked(files_info, target_base_p
     if all_mapping_tables:
         # 使用合并后的目录结构，不重新构建
         for top_dir in merged_directory_structure:
-        
+            pass
         final_result = {
             'mapping_table': all_mapping_tables,
             'directory_structure': merged_directory_structure,  # 直接使用合并后的结构
@@ -636,7 +629,7 @@ def analyze_files_async(task_id, source_path, target_path, api_key):
             analysis_tasks[task_id]['stage_progress'] = 30 + int((i + 1) / total_files * 30)  # 30-60%
             
             if (i + 1) % 10 == 0 or i == 0:  # 每10个文件打印一次进度
-            
+                pass
             try:
                 file_info = get_file_info(file_path)
                 if file_info:
@@ -902,8 +895,9 @@ def migrate_files():
         classifications = data.get('classifications', [])
         
         for i, item in enumerate(classifications[:3]):  # 只打印前3个作为示例
+            pass
         if len(classifications) > 3:
-        
+            pass
         if not classifications:
             return jsonify({'error': '没有要迁移的文件'}), 400
         

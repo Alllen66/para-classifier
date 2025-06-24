@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: para-classifier
+    env: python
+    buildCommand: |
+      cd para-classifier-frontend
+      npm install
+      npm run build
+      cp -r dist/* ../para-file-classifier/src/static/
+      cd ../para-file-classifier
+      pip install -r requirements.txt
+    startCommand: cd para-file-classifier && python src/main.py
+    envVars:
+      - key: SECRET_KEY
+        value: your-render-secret-key
+      - key: FLASK_DEBUG
+        value: "False"
+      - key: PORT
+        value: "5002" 

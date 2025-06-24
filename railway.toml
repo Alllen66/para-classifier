@@ -1,0 +1,16 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+
+[[services]]
+name = "para-classifier"
+source = "."
+
+[services.variables]
+PORT = "5002"
+SECRET_KEY = "your-railway-secret-key"
+FLASK_DEBUG = "False" 
