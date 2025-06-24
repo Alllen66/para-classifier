@@ -1,5 +1,5 @@
 Flask==2.3.3
 Flask-CORS==4.0.0
 Flask-SQLAlchemy==3.0.5
-volcenginesdkarkruntime==1.0.11
+volcengine-python-sdk==1.0.11
 Werkzeug==2.3.7
