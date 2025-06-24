@@ -28,6 +28,8 @@ with app.app_context():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    if path == "":
+        return "OK", 200
     static_folder_path = app.static_folder
     if static_folder_path is None:
             return "Static folder not configured", 404
@@ -43,7 +45,7 @@ def serve(path):
 
 @app.route('/health')
 def health():
-    return 'OK', 200
+    return "OK", 200
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5002))
