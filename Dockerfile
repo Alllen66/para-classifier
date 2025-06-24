@@ -17,13 +17,11 @@ COPY . /app/
 
 # 构建前端
 WORKDIR /app/para-classifier-frontend
-RUN npm install --legacy-peer-deps && \
-    npm run build
+RUN npm install --legacy-peer-deps
+RUN npm run build
 
-# 切换到后端目录
+# 切换到后端目录并安装依赖
 WORKDIR /app/para-file-classifier
-
-# 安装 Python 依赖
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 暴露端口
