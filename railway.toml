@@ -2,7 +2,7 @@
 # builder = "DOCKERFILE"   # 移除此行，Railway将自动检测Dockerfile
 
 [deploy]
-startCommand = "gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 'src.main:app'"
+startCommand = "/bin/sh -c \"gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 'src.main:app'\""
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
