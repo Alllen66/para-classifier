@@ -18,7 +18,7 @@ COPY . /app/
 # 构建前端
 WORKDIR /app/para-classifier-frontend
 RUN npm install --legacy-peer-deps
-RUN npm run build
+RUN npm run build -- --outDir /app/para-file-classifier/src/static
 
 # 切换到后端目录并安装依赖
 WORKDIR /app/para-file-classifier
