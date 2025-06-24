@@ -1,7 +1,8 @@
 [build]
-builder = "DOCKERFILE"
+# builder = "DOCKERFILE"   # 移除此行，Railway将自动检测Dockerfile
 
 [deploy]
+startCommand = "python src/main.py"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
