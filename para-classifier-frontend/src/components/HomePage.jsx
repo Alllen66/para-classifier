@@ -7,6 +7,7 @@ import { Label } from './ui/label'
 import { FolderOpen, Sparkles, ArrowRight, Info, Loader2, AlertCircle, KeyRound, FolderSearch, ChevronDown, ChevronRight } from 'lucide-react'
 import { Alert, AlertDescription } from './ui/alert'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible'
+import { API_ENDPOINTS, apiRequest } from '../config/api'
 
 const HomePage = ({ setAnalysisData }) => {
   const [sourcePath, setSourcePath] = useState('')
@@ -85,7 +86,7 @@ const HomePage = ({ setAnalysisData }) => {
         api_key: apiKey,
       }
       
-      const response = await fetch('http://localhost:5002/api/analyze', {
+      const response = await fetch(API_ENDPOINTS.analyze, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +128,7 @@ const HomePage = ({ setAnalysisData }) => {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:5002/api/test-api-key', {
+      const response = await fetch(API_ENDPOINTS.testApiKey, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -4,14 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Progress } from './ui/progress'
 import { Alert, AlertDescription } from './ui/alert'
-import { 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  FolderPlus, 
-  ArrowRight,
-  Home
-} from 'lucide-react'
+import { Checkbox } from './ui/checkbox'
+import { Badge } from './ui/badge'
+import { CheckCircle, XCircle, FolderTree, ArrowRight, Home, AlertTriangle } from 'lucide-react'
+import { API_ENDPOINTS } from '../config/api'
 
 const MigrationPage = ({ classifications }) => {
   const [migrationStatus, setMigrationStatus] = useState('preparing')
@@ -39,12 +35,17 @@ const MigrationPage = ({ classifications }) => {
         }
         
         
-        const response = await fetch('http://localhost:5002/api/migrate', {
+        const response = await fetch(API_ENDPOINTS.migrate, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(migrationData),
+          body: JSON.stringify({
+            classifications: classifications.map(item => ({
+              source_path: item.source_path,
+              target_path: item.suggested_path
+            }))
+          })
         })
 
         if (!response.ok) {
@@ -110,7 +111,7 @@ const MigrationPage = ({ classifications }) => {
         {/* 新建文件夹预览 */}
         <div>
           <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-            <FolderPlus className="h-5 w-5 mr-2" />
+            <FolderTree className="h-5 w-5 mr-2" />
             将创建的文件夹：
           </h3>
           <div className="bg-gray-50 rounded-lg p-4 max-h-40 overflow-y-auto">

@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from './ui/alert-dialog'
 import { Loader2, FileText, CheckCircle, XCircle, FolderTree, Brain, AlertTriangle, ArrowRight, Home, Shuffle, FolderKanban, FolderPlus, Shield } from 'lucide-react'
+import { API_ENDPOINTS } from '../config/api'
 
 // 新的：递归渲染目录结构，支持新增文件夹标记和复杂结构
 const renderTree = (data, currentPath = '', level = 0, isProjectStructure = false) => {
@@ -181,7 +182,7 @@ const AnalysisPage = ({ analysisData, setAnalysisResults }) => {
 
   const pollStatus = useCallback(async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:5002/api/classification/${taskId}`)
+      const response = await fetch(API_ENDPOINTS.classificationStatus(taskId))
       
       if (!response.ok) {
         throw new Error(`获取分析状态失败 (HTTP ${response.status})`)
