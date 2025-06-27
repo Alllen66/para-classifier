@@ -36,14 +36,28 @@ def serve(path):
     if static_folder_path is None:
         return "Static folder not configured", 404
 
-    if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
-        return send_from_directory(static_folder_path, path)
-    else:
+    # 如果是根路径，直接返回index.html
+    if path == "":
         index_path = os.path.join(static_folder_path, 'index.html')
         if os.path.exists(index_path):
             return send_from_directory(static_folder_path, 'index.html')
         else:
             return "index.html not found", 404
+    
+    # 检查静态文件是否存在（包括子目录）
+    file_path = os.path.join(static_folder_path, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_from_directory(static_folder_path, path)
+    
+    # 如果文件不存在，对于SPA路由返回index.html
+    # 但排除明显的静态资源请求
+    if not any(path.endswith(ext) for ext in ['.js', '.css', '.ico', '.png', '.jpg', '.svg', '.json', '.txt']):
+        index_path = os.path.join(static_folder_path, 'index.html')
+        if os.path.exists(index_path):
+            return send_from_directory(static_folder_path, 'index.html')
+    
+    # 静态资源不存在时返回404
+    return "File not found", 404
 
 @app.route('/health')
 def health():
