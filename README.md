@@ -1,122 +1,147 @@
-# PARA智能文件分类工具
+# 🏠 PARA智能文件分类工具 - 本地Web版
 
-## 项目简介
+## 🌟 项目简介
 
-PARA智能文件分类工具是一个基于AI的文件自动分类系统，帮助用户按照PARA（Projects、Areas、Resources、Archive）方法论智能整理文件。
+PARA智能文件分类工具是一款基于AI的文件管理助手，帮助您按照PARA方法（Projects/Areas/Resources/Archive）智能整理文件。本项目提供**完全本地部署**的Web版本，无需联网即可享受智能文件分类服务。
 
-## 技术栈
+## ✨ 核心特性
 
-- **后端**: Flask + Python 3.11
-- **前端**: React + Vite + Tailwind CSS  
-- **AI服务**: 302.AI API (豆包模型)
-- **数据库**: SQLite
+- 🤖 **AI智能分析** - 使用豆包AI深度分析文件内容
+- 📁 **PARA方法分类** - 按照Projects/Areas/Resources/Archive科学分类
+- 🚀 **批量处理** - 支持大量文件同时智能分析
+- 📊 **可视化展示** - 直观展示分类建议和统计信息
+- ⚡ **一键迁移** - 确认后自动移动文件到对应目录
+- 🏠 **完全本地** - 无需联网，保护隐私安全
+- 💻 **现代UI** - 美观响应式界面，支持多种设备
 
-## 功能特点
+## 🚀 快速开始
 
-- 🤖 智能AI文件分类
-- 📁 支持PARA方法论
-- 🔍 文件内容分析
-- 📊 可视化分类结果
-- 🚀 批量文件迁移
-- 💬 歧义文件讨论
-
-## 安装部署
-
-### 环境要求
-
-- Python 3.11+
-- Node.js 16+
-- 302.AI API Key
-
-### 1. 克隆项目
-
+### 方式一：一键启动（推荐）
 ```bash
-git clone https://github.com/Alllen66/para-classifier.git
-cd para-classifier
+./启动应用.sh
 ```
 
-### 2. 后端安装
-
+### 方式二：使用原有脚本
 ```bash
+chmod +x start.sh && ./start.sh
+# 选择模式 2（生产模式）
+```
+
+### 方式三：手动启动
+```bash
+# 1. 后端设置
 cd para-file-classifier
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-```
 
-### 3. 前端安装
+# 2. 前端构建
+cd ../para-classifier-frontend
+npm install && npm run build
 
-```bash
-cd para-classifier-frontend
-npm install
-```
-
-### 4. 环境配置
-
-设置环境变量：
-
-```bash
-export SECRET_KEY="your-secret-key-here"
-export FLASK_DEBUG="False"  # 生产环境设为False
-```
-
-### 5. 运行项目
-
-**开发模式**：
-```bash
-# 后端
-cd para-file-classifier
-python src/main.py
-
-# 前端
-cd para-classifier-frontend
-npm run dev
-```
-
-**生产模式**：
-```bash
-# 构建前端
-cd para-classifier-frontend
-npm run build
-
-# 复制构建文件到后端
+# 3. 集成启动
 cp -r dist/* ../para-file-classifier/src/static/
-
-# 启动后端
 cd ../para-file-classifier
-gunicorn -c gunicorn.conf.py src.main:app
+source venv/bin/activate
+python src/main.py
 ```
 
-## 使用说明
+## 🌐 访问应用
+启动成功后，在浏览器中访问：**http://localhost:5002**
 
-1. 打开web界面
-2. 输入302.AI API Key
-3. 选择源文件夹和目标文件夹
-4. 点击开始分析
-5. 查看分类结果
-6. 确认后执行迁移
+## 📋 环境要求
 
-## API文档
+- **Python 3.11+**
+- **Node.js 18+** 
+- **可选：pnpm**（推荐，速度更快）
 
-### 主要接口
+## 🎯 使用场景
 
-- `POST /api/test-api-key` - 测试API Key
-- `POST /api/analyze` - 开始文件分析
-- `GET /api/classification/{task_id}` - 获取分析状态
-- `POST /api/migrate` - 执行文件迁移
+### 个人用户
+- 📚 整理学习资料和文档
+- 💼 管理工作项目文件
+- 🗂️ 归档个人数字资产
 
-## 贡献指南
+### 团队协作
+- 🏢 标准化团队文件分类
+- 📊 提高文件管理效率
+- 🔍 快速定位所需文件
 
-1. Fork项目
-2. 创建特性分支
+### 知识管理
+- 🧠 构建个人知识体系
+- 📖 整理研究资料
+- 💡 管理创意和想法
+
+## 🛠️ 技术架构
+
+- **前端**: React + Vite + TailwindCSS + shadcn/ui
+- **后端**: Python Flask + SQLite
+- **AI服务**: 豆包AI API
+- **部署**: 单机本地部署
+
+## 📁 项目结构
+
+```
+para-file-classifier-optimized/
+├── para-file-classifier/      # Python Flask 后端
+│   ├── src/
+│   │   ├── main.py           # 主程序入口
+│   │   ├── routes/           # API路由
+│   │   ├── models/           # 数据模型
+│   │   └── static/           # 前端构建文件
+│   └── requirements.txt      # Python依赖
+├── para-classifier-frontend/  # React 前端源码
+│   ├── src/
+│   │   ├── components/       # React组件
+│   │   ├── config/           # 配置文件
+│   │   └── hooks/            # 自定义钩子
+│   └── package.json          # 前端依赖
+├── 启动应用.sh               # 简化启动脚本
+├── start.sh                  # 完整启动脚本
+└── 本地部署指南.md           # 详细部署说明
+```
+
+## 🔧 常见问题
+
+### Q: 启动时提示Python版本错误？
+A: 请确保安装 Python 3.11 或更高版本。macOS用户可使用 `brew install python@3.11`
+
+### Q: 端口5002被占用？
+A: 修改 `para-file-classifier/src/main.py` 中的端口号，或关闭占用该端口的程序
+
+### Q: 前端构建失败？
+A: 尝试删除 `node_modules` 并重新安装：`rm -rf node_modules && npm install`
+
+### Q: AI分析不工作？
+A: 请确保正确配置豆包AI的API密钥，并检查网络连接
+
+## 🚀 部署选项
+
+### 本地部署（推荐）
+完全本地运行，隐私安全，适合个人和小团队使用。
+
+### 云端部署
+项目支持部署到 Vercel、Railway 等平台，详见 `一键部署说明.md`
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本项目
+2. 创建功能分支
 3. 提交更改
-4. 推送到分支
-5. 创建Pull Request
+4. 发起 Pull Request
 
-## 许可证
+## 📄 许可证
 
-MIT License
+MIT License - 详见 [LICENSE](LICENSE) 文件
 
-## 支持
+## 🙏 致谢
 
-如有问题请提交Issue或联系开发者。 
+- [豆包AI](https://www.doubao.com/) - 提供智能分析服务
+- [PARA方法](https://fortelabs.co/blog/para/) - 文件分类理论基础
+- 开源社区的各种优秀工具和库
+
+---
+
+**🎉 开始使用 PARA智能文件分类工具，让文件管理变得简单高效！** 
